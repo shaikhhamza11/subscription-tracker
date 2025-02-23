@@ -51,7 +51,7 @@ const subscriptionSchema = mongoose.Schema(
       type: Date,
       required: true,
       validate: {
-        validator: (value) => value <= new Date(),
+        validator: value => value <= new Date(),
         message: 'Start date must be in the past',
       },
     },
@@ -71,7 +71,7 @@ const subscriptionSchema = mongoose.Schema(
       },
     },
   },
-  { timeStamp: true },
+  { timestamps: true },
 );
 
 subscriptionSchema.pre('save', function (next) {
@@ -83,9 +83,7 @@ subscriptionSchema.pre('save', function (next) {
       yearly: 365,
     };
     this.renewalDate = new Date(this.startDate);
-    this.renewalDate.setDate(
-      this.renewalDate.getDate() + renewalPeriods[this.frequency],
-    );
+    this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriods[this.frequency]);
   }
 
   if (this.renewalDate < new Date()) {
